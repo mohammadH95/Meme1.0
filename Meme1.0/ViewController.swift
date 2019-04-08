@@ -44,23 +44,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // MARK: - IBAction
     
-    /*@IBAction func pickAnImageFromAlbum(_ sender: Any) {
-        imagePicker.sourceType = .photoLibrary
-        present(imagePicker, animated: true, completion: nil)
-    }
-    
-    @IBAction func pickAnImageFromCamera(_ sender: Any) {
-        if UIImagePickerController.isSourceTypeAvailable(.camera){
-            imagePicker.sourceType = .camera
-            present(imagePicker, animated: true, completion: nil)
-        }
-        else{
-            print("Camera not available")
-        }
-        
-    }*/
-    
-    
     
     @IBAction func chooseImageFromCameraOrPhoto(_ sender: UIBarButtonItem) {
         let imagePicker = UIImagePickerController()
