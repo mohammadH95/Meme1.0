@@ -10,28 +10,24 @@ import UIKit
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     
-    // MARK: - Var
     
-    let imagePicker = UIImagePickerController()
+    
+    
 
     // MARK: - IBOutlet
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var topText: UITextField!
     @IBOutlet weak var bottomText: UITextField!
+    @IBOutlet weak var cameraButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        imagePicker.delegate = self
+        cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.camera)
         
-        topText.delegate = self
-        topText.defaultTextAttributes = memeTextAttributes
-        topText.textAlignment = .center
-        
-        bottomText.delegate = self
-        bottomText.defaultTextAttributes = memeTextAttributes
-        bottomText.textAlignment = .center
+        setupTextField(textField: topText)
+        setupTextField(textField: bottomText)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -48,7 +44,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // MARK: - IBAction
     
-    @IBAction func pickAnImageFromAlbum(_ sender: Any) {
+    /*@IBAction func pickAnImageFromAlbum(_ sender: Any) {
         imagePicker.sourceType = .photoLibrary
         present(imagePicker, animated: true, completion: nil)
     }
@@ -62,6 +58,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             print("Camera not available")
         }
         
+    }*/
+    
+    
+    
+    @IBAction func chooseImageFromCameraOrPhoto(_ sender: UIBarButtonItem) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = (sender.tag == 0) ? .camera : .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
     }
     
     @IBAction func share(_ sender: Any) {
@@ -99,6 +104,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // MARK: - TextField
     
+    func setupTextField(textField: UITextField) {
+        let memeTextAttributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.strokeColor: UIColor.black,
+            NSAttributedString.Key.foregroundColor: UIColor.white,
+            NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
+            NSAttributedString.Key.strokeWidth: -4.0
+        ]
+        
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.textAlignment = .center
+        textField.delegate = self
+    }
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if topText.isEditing && topText.text == "TOP" {
             topText.text = ""
@@ -114,12 +132,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return true
     }
     
-    let memeTextAttributes: [NSAttributedString.Key: Any] = [
-        NSAttributedString.Key.strokeColor: UIColor.black,
-        NSAttributedString.Key.foregroundColor: UIColor.white,
-        NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
-        NSAttributedString.Key.strokeWidth: -4.0
-    ]
     
     //MARK: - KeyboardFunc
     
@@ -138,7 +150,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @objc func keyboardWillShow(_ notification:Notification) {
         if bottomText.isEditing {
-            view.frame.origin.y -= getKeyboardHeight(notification)
+            view.frame.origin.y = -getKeyboardHeight(notification)
         }
         
     }
